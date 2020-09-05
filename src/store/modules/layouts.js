@@ -1,13 +1,14 @@
-import { layouts } from '@/config/index'
+import { defaultLayouts } from '@/config/layouts'
 
 export default {
     state: {
         layoutsConfig: {
             theme: {
-                siderMenu: 'dark',
-                topMenu: 'dark'
+				siderMenu: defaultLayouts.theme.siderMenu,
+				headMenu: defaultLayouts.theme.headMenu
             },
-            siderWidth: layouts.siderMenuWidth
+			siderWidth: defaultLayouts.siderMenuWidth,
+			headMenu: defaultLayouts.headMenu
         }
     },
     getters: {
