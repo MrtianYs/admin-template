@@ -4,5 +4,7 @@ export const defaultLayouts = {
 		headMenu: 'dark'
 	},
 	siderMenuWidth: '270px',
-	headMenu: true
+	headMenu: false,
+	tabs: true,
+	breadcrumb: true
 }

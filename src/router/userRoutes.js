@@ -16,13 +16,12 @@ const addRouter = [
 		path: '/',
 		component: Basic,
 		redirect: '/home',
-		meta: { hiddenInMenu: true },
 		children: [
 			{
 				path: '/home',
 				name: 'home',
 				component: home,
-				meta: { hiddenInMenu: true }
+				meta: { title: '首页' }
 			}
 		]
 	}
@@ -32,21 +31,26 @@ export const userRoutes = [
 	{
 		path: '/user',
 		name: 'user',
-		redirect: '/user/role',
 		component: RouterView,
-		meta: { title: '用户管理' },
+		meta: { title: '用户管理', icon: 'user' },
+		redirect: '/user/role',
 		children: [
 			{
 				path: 'role',
 				name: 'role',
 				component: () => import('@/views/user/role/index.vue'),
 				meta: { title: '角色管理' },
+				redirect: 'role/student',
 				children: [
 					{
 						path: 'student',
 						name: 'student',
-						component: () => import('@/views/user/role/index.vue'),
-						meta: { title: '学生用户' }
+						meta: { title: '学生管理' }
+					},
+					{
+						path: 'person',
+						name: 'person',
+						meta: { title: '学生管理2' }
 					}
 				]
 			},
@@ -57,12 +61,6 @@ export const userRoutes = [
 				meta: { title: '权限管理' }
 			}
 		]
-	},
-	{
-		path: '/teacher',
-		name: 'teacher',
-		component: () => import('@/views/teacher/index.vue'),
-		meta: { title: '教师管理' }
 	}
 ]
 

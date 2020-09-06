@@ -20,6 +20,13 @@ module.exports = {
         'vue/html-indent': ['error', 4],
         'vue/script-indent': ['error', 4, {
             baseIndent: 1
-        }]
+		}],
+		"vue/max-attributes-per-line": ["error", {
+			"singleline": 4,
+			"multiline": {
+				"max": 1,
+				"allowFirstLine": false
+			}
+		}]
     }
 }

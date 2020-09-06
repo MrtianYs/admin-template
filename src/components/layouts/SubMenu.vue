@@ -5,22 +5,29 @@
         v-on="$listeners"
     >
         <span slot="title">
-            <a-icon type="mail" />
+            <a-icon
+                v-if="menu.meta.icon"
+                :type="menu.meta.icon"
+            />
             <span>{{ menu.meta.title }}</span>
         </span>
         <template v-for="item in menu.children">
-            <a-menu-item
-                v-if="!item.children"
-                :key="item.name"
-            >
-                <a-icon type="pie-chart" />
-                <span>{{ item.meta.title }}</span>
-            </a-menu-item>
             <sub-menu
-                v-else
+                v-if="item.children && !item.meta.hiddenInMenu"
                 :key="item.name"
                 :menu="item"
             />
+            <a-menu-item
+                v-else-if="!item.meta.hiddenInMenu"
+                :key="item.name"
+            >
+                <a
+                    v-if="item.meta.target"
+                    :target="item.meta.target"
+                    :href="item.path"
+                >{{ item.meta.title }}</a>
+                <span>{{ item.meta.title }}</span>
+            </a-menu-item>
         </template>
     </a-sub-menu>
 </template>
@@ -30,14 +37,10 @@
         name: 'SubMenu',
         props: {
             ...Menu.SubMenu.props,
-            // Cannot overlap with properties within Menu.SubMenu.props
             menu: {
                 type: Object,
                 default: () => ({})
             }
-        },
-        mounted () {
-            console.log(this.menu)
         }
     }
 </script>

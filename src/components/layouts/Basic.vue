@@ -12,21 +12,25 @@
                 :theme="getLayoutConfig.theme.siderMenu"
                 mode="inline"
                 v-model="sideMenuKey"
+                :open-keys.sync="sideMenuOpenKey"
                 @click="sideMenuClick"
             >
                 <template v-for="item in sideMenuList">
-                    <a-menu-item
-                        v-if="!item.children"
-                        :key="item.name"
-                    >
-                        <a-icon type="pie-chart" />
-                        <span class="nav-text">{{ item.meta.title }}</span>
-                    </a-menu-item>
                     <SubMenu
+                        v-if="item.children && !item.meta.hiddenInMenu"
                         :key="item.name"
-                        v-else
                         :menu="item"
                     />
+                    <a-menu-item
+                        v-else-if="!item.meta.hiddenInMenu"
+                        :key="item.name"
+                    >
+                        <a-icon
+                            v-if="item.meta.icon"
+                            :type="item.meta.icon"
+                        />
+                        <span class="nav-text">{{ item.meta.title }}</span>
+                    </a-menu-item>
                 </template>
             </a-menu>
         </a-layout-sider>
@@ -52,7 +56,12 @@
                                 :key="item.name"
                                 v-if="!item.meta.hiddenInMenu"
                             >
-                                {{ item.meta.title }}
+                                <a
+                                    v-if="item.meta.target"
+                                    :target="item.meta.target"
+                                    :href="item.path"
+                                >{{ item.meta.title }}</a>
+                                <span v-else>{{ item.meta.title }}</span>
                             </a-menu-item>
                         </template>
                     </a-menu>
@@ -67,9 +76,9 @@
                     </div>
                 </div>
             </a-layout-header>
-            <a-layout>
-                <Xbreadcrumb />
-                <Xtabs />
+            <a-layout :style="{ marginTop: getLayoutConfig.tabs || getLayoutConfig.breadcrumb ? 0 : '15px' }">
+                <Xtabs v-if="getLayoutConfig.tabs" />
+                <Xbreadcrumb v-if="getLayoutConfig.breadcrumb" />
             </a-layout>
             <a-layout-content :style="{ margin: '0 16px', overflow: 'initial' }">
                 <div :style="{ padding: '24px', background: '#fff', textAlign: 'center' }">
@@ -97,7 +106,8 @@
                 sideMenuList: [],
                 headMenuList: [],
                 headMenuKey: [],
-                sideMenuKey: []
+                sideMenuKey: [],
+                sideMenuOpenKey: []
             }
         },
         components: {
@@ -125,19 +135,26 @@
                 if (this.getLayoutConfig.headMenu) {
                     const headMenuKey = this.$route.matched[1].name
                     this.headMenuKey = [headMenuKey]
-                    this.sideMenuKey = [this.$route.name]
-                    this.sideMenuList = this.getUserRoutes.filter(item => item.name === headMenuKey)[0].children
+                    const sildeMenuParent = this.getUserRoutes.filter(item => item.name === headMenuKey)
+                    if (sildeMenuParent[0]) {
+                        this.sideMenuList = sildeMenuParent[0].children
+                        this.sideMenuOpenKey = this.$route.matched.slice(1, this.$route.matched.length - 1).map(item => item.name)
+                    }
                 } else {
                     this.sideMenuList = this.getUserRoutes
+                    this.sideMenuOpenKey = this.$route.matched.slice(1).map(item => item.name)
                 }
+                this.sideMenuKey = [this.$route.name]
             },
             setCollapsed () {
                 if (this.collapsed) {
                     this.setSiderWidth(defaultLayouts.siderMenuWidth)
                     this.collapsed = false
+                    this.setMenuStatus()
                 } else {
                     this.setSiderWidth('80px')
                     this.collapsed = true
+                    this.sideMenuOpenKey = []
                 }
             },
             headMenuClick ({ item, key, keyPath }) {
