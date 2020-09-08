@@ -13,7 +13,7 @@ export default {
 			tabs: defaultLayouts.tabs
 		},
 		tabs: {
-			list: [],
+			list: sessionStorage.getItem('tabs') ? JSON.parse(sessionStorage.getItem('tabs')) : [],
 			on: 'home'
 		}
     },
@@ -31,7 +31,8 @@ export default {
 		},
 		setTabs (state, { list, on }) {
 			state.tabs.list = list
-			state.tabs.on = on
+			on && (state.tabs.on = on)
+			sessionStorage.setItem('tabs', JSON.stringify(list))
 		}
     }
 }
