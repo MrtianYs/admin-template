@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { defaultLayouts } from '@/config/layouts'
 
 export default {
@@ -13,7 +14,7 @@ export default {
 			tabs: defaultLayouts.tabs
 		},
 		tabs: {
-			list: sessionStorage.getItem('tabs') ? JSON.parse(sessionStorage.getItem('tabs')) : [],
+			list: Vue.TY.get('tabs') ? Vue.TY.get('tabs') : [],
 			on: 'home'
 		}
     },
@@ -32,7 +33,7 @@ export default {
 		setTabs (state, { list, on }) {
 			state.tabs.list = list
 			on && (state.tabs.on = on)
-			sessionStorage.setItem('tabs', JSON.stringify(list))
+			Vue.TY.set('tabs', list)
 		}
     }
 }

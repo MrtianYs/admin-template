@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
+import './lazy'
 import router from './router'
 import store from './store'
-import './lazy/index'
+import './mock'
 import './global.less'
 
 Vue.config.productionTip = false

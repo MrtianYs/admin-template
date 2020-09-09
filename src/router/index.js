@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import notFound from '../views/error/404.vue'
 import authorized from '../views/error/403.vue'
 import servererror from '../views/error/500.vue'
+import login from '../views/login/index.vue'
 import addRouter from './userRoutes'
 
 Vue.use(VueRouter)
@@ -10,7 +11,8 @@ Vue.use(VueRouter)
 const routes = [
 	{
 		path: '/login',
-		name: 'login'
+		name: 'login',
+		component: login
 	},
 	{
 		path: '/404',
